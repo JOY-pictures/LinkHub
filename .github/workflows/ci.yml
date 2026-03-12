@@ -23,5 +23,8 @@ jobs:
           java-version: 17
           cache: maven
 
+      - name: Grand execute permission for Maven wrapper
+        run: chmod +x mvnw
+
       - name: Build with Maven
         run: ./mvnw clean verify
