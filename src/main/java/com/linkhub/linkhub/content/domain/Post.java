@@ -2,12 +2,14 @@ package com.linkhub.linkhub.content.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "posts")
 @Getter
+@NoArgsConstructor
 public class Post {
 
     @Id
@@ -22,10 +24,6 @@ public class Post {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    protected Post() {
-        //JPA
-    }
 
     private Post(String authorId, String text, Instant createdAt) {
         this.authorId = authorId;

@@ -1,11 +1,14 @@
 package com.linkhub.linkhub.modes.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "modes")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mode {
 
     @Id
@@ -15,22 +18,8 @@ public class Mode {
     @Column(nullable = false, unique = true)
     private String name;
 
-    protected Mode() {
-        //JPA
-    }
 
     public Mode(String name) {
         this.name = name;
-    }
-
-    public static Mode of(String name) {
-        switch (name.toLowerCase()) {
-            case "learning":
-            case "fun":
-            case "calm":
-                return new Mode(name);
-            default:
-                throw new IllegalArgumentException("Unknown mode: " + name);
-        }
     }
 }

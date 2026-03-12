@@ -12,8 +12,8 @@ public class SetUserModeUseCase {
     private final ModeRepository modeRepository;
 
     public Mode setMode(String modeName) {
-        Mode mode = Mode.of(modeName);
-        return modeRepository.findByName(modeName).
-                orElseGet(() -> modeRepository.save(mode));
+        return modeRepository.findByName(modeName)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Unknown mode: " + modeName));
     }
 }
