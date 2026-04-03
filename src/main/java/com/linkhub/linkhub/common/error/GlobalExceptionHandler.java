@@ -24,4 +24,11 @@ public class GlobalExceptionHandler {
     }
 
     public record ErrorResponse(String error) {}
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body((new ErrorResponse(ex.getMessage())));
+    }
 }

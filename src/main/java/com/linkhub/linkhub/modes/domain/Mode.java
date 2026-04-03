@@ -12,7 +12,7 @@ public class Mode {
 
     private String name;
 
-    public Mode(String name) {
+    private Mode(String name) {
         this.name = name;
     }
 

@@ -35,6 +35,9 @@ public class Post {
         if (content == null) {
             throw new IllegalArgumentException("content must not be null");
         }
+        if (now == null) {
+            throw new IllegalArgumentException("createdAt must not be null");
+        }
         return new Post(authorId.trim(), now, postType, content);
     }
 
