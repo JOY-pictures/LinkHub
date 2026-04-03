@@ -4,27 +4,38 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.User;
 
-@Entity
-@Table(name = "user_mode")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserMode {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
     private String userId;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "mode_id", nullable = false)
     private Mode mode;
 
     public UserMode(String userId, Mode mode) {
         this.userId = userId;
         this.mode = mode;
+    }
+
+    public static UserMode create(String userId, Mode mode) {
+        if (userId == null || userId.isBlank()) {
+            throw new IllegalArgumentException("User ID must not be blank");
+        }
+        if (mode == null) {
+            throw new IllegalArgumentException("Mode must not be null");
+        }
+        return new UserMode(userId, mode);
+    }
+
+
+
+    public static UserMode reconstitute(Long id, String userId, Mode mode) {
+        UserMode um = new UserMode(userId, mode);
+        um.id = id;
+        return um;
     }
 
     public void changeMode(Mode mode) {

@@ -1,7 +1,14 @@
 package com.linkhub.linkhub.modes.api;
 
+import com.linkhub.linkhub.modes.api.dto.UserModeRequest;
+import com.linkhub.linkhub.modes.api.dto.UserModeResponse;
+import com.linkhub.linkhub.modes.application.SetModeCommand;
+import com.linkhub.linkhub.modes.application.SetModeResult;
+import com.linkhub.linkhub.modes.application.GetUserModeUseCase;
 import com.linkhub.linkhub.modes.application.SetUserModeUseCase;
 import com.linkhub.linkhub.modes.domain.Mode;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,25 +16,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users/{userId}/mode")
-public class ModeController {
+public class UserModeController {
 
     private final SetUserModeUseCase setUserModeUseCase;
+    private final GetUserModeUseCase getUserModeUseCase;
 
     @PostMapping
-    public ResponseEntity<String> setMode(@RequestBody ModeRequest request) {
-        setUserModeUseCase.setMode(request.userId(), request.modeName());
-        return ResponseEntity.ok("Mode set to: " + request.modeName());
+    public ResponseEntity<UserModeResponse> setMode(@PathVariable String userId,
+                                                    @Valid @RequestBody UserModeRequest request
+    ) {
+        SetModeResult response = setUserModeUseCase.setMode(new SetModeCommand(userId, request.modeName()));
+        return ResponseEntity.ok(new UserModeResponse(response.userId(), response.modeName()));
     }
 
     @GetMapping
-    public ResponseEntity<String> getMode() {
-        return ResponseEntity.ok("Current mode: Learning");
+    public ResponseEntity<UserModeResponse> getMode(@PathVariable String userId
+    ) {
+        Mode mode = getUserModeUseCase.getMode(userId);
+        return ResponseEntity.ok(new UserModeResponse(userId, mode.getName()));
     }
-
-    public record ModeRequest(
-            String userId,
-            String modeName
-    ) {}
-
-
 }

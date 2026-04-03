@@ -1,48 +1,46 @@
 package com.linkhub.linkhub.content.domain;
 
-import jakarta.persistence.*;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-@Entity
-@Table(name = "posts")
 @Getter
-@NoArgsConstructor
 public class Post {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "authorId", nullable = false, length = 64)
     private String authorId;
 
-    @Column(name = "text", nullable = false, length = 4000)
-    private String text;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    private Post(String authorId, String text, Instant createdAt) {
+    private PostType postType;
+
+    private PostContent content;
+
+    private Post(String authorId, Instant createdAt, PostType postType, PostContent content) {
         this.authorId = authorId;
-        this.text = text;
         this.createdAt = createdAt;
+        this.postType = postType;
+        this.content = content;
     }
 
-    public static Post create(String authorId, String text, Instant now) {
+    public static Post create(String authorId, Instant now, PostType postType, PostContent content) {
         if (authorId == null || authorId.isBlank()) {
             throw new IllegalArgumentException("authorId must not be blank");
         }
-        if (text == null || text.isBlank()) {
-            throw new IllegalArgumentException("text must not be blank");
+        if (postType == null) {
+            throw new IllegalArgumentException("post type must not be null");
         }
-        if (text.length() > 4000) {
-            throw new IllegalArgumentException("text is too long");
+        if (content == null) {
+            throw new IllegalArgumentException("content must not be null");
         }
-        return new Post(authorId.trim(), text.trim(), now);
+        return new Post(authorId.trim(), now, postType, content);
     }
 
-
+    public static Post reconstitute(Long id, String authorId, PostType postType, Instant createdAt, PostContent content) {
+        Post post = new Post(authorId, createdAt, postType, content);
+        post.id = id;
+        return post;
+    }
 }

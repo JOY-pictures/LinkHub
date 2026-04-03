@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-interface SpringDataModeJpaRepository extends JpaRepository<Mode, Long> {
-    Optional<Mode> findByName(String name);
+interface SpringDataModeJpaRepository extends JpaRepository<ModeJpaEntity, Long> {
+    Optional<ModeJpaEntity> findByName(String name);
 }

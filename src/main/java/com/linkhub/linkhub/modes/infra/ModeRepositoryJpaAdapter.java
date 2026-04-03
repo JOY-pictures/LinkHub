@@ -15,11 +15,21 @@ public class ModeRepositoryJpaAdapter implements ModeRepository {
 
     @Override
     public Optional<Mode> findByName(String name) {
-        return jpa.findByName(name);
+        return jpa.findByName(name).map(this::toDomain);
     }
 
     @Override
     public Mode save(Mode mode) {
-        return jpa.save(mode);
+        ModeJpaEntity modeJpaEntity = toJpaEntity(mode);
+        ModeJpaEntity saved = jpa.save(modeJpaEntity);
+        return toDomain(saved);
+    }
+
+    private ModeJpaEntity toJpaEntity(Mode mode) {
+        return new ModeJpaEntity(mode.getName());
+    }
+
+    private Mode toDomain(ModeJpaEntity entity) {
+        return Mode.reconstitute(entity.getId(), entity.getName());
     }
 }

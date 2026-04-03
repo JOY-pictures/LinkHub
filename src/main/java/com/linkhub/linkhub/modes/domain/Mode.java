@@ -5,21 +5,27 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "modes")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mode {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String name;
-
 
     public Mode(String name) {
         this.name = name;
+    }
+
+    public static Mode create(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Mode name must not be blank");
+        }
+        return new Mode(name.trim());
+    }
+
+    public static Mode reconstitute(Long id, String name) {
+        Mode mode = new Mode(name);
+        mode.id = id;
+        return mode;
     }
 }

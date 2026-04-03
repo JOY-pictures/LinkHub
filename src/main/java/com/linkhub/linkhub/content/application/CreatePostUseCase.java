@@ -2,6 +2,8 @@ package com.linkhub.linkhub.content.application;
 
 import com.linkhub.linkhub.content.domain.Post;
 import com.linkhub.linkhub.content.domain.PostRepository;
+import com.linkhub.linkhub.content.domain.PostType;
+import com.linkhub.linkhub.content.domain.TextContent;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,13 @@ public class CreatePostUseCase {
 
     public CreatePostResult create(CreatePostCommand command) {
         Instant now = Instant.now(clock);
-        Post post = Post.create(command.authorId(), command.text(), now);
+        TextContent content = TextContent.create(command.text());
+        Post post = Post.create(
+                command.authorId(),
+                now,
+                PostType.TEXT,
+                content
+        );
         Post saved = postRepository.save(post);
         return new CreatePostResult(saved.getId(), saved.getCreatedAt());
     }
