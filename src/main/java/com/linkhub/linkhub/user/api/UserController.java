@@ -27,28 +27,29 @@ public class UserController {
                 request.username(), request.displayName())
         );
         return new CreateUserResponse(
+                result.id(),
                 result.username(),
                 result.displayName(),
-                result.createdAt().toString());
+                result.createdAt());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getUserById (@PathVariable Long userId) {
         GetUserResult result = getUserByIdUseCase.getById(userId);
         return ResponseEntity.ok(new UserResponse(
                 result.username(),
                 result.displayName(),
-                result.createdAt().toString()
+                result.createdAt()
         ));
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<UserResponse> getUserById (@PathVariable String username) {
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<UserResponse> getUserByUsername (@PathVariable String username) {
         GetUserResult result = getUserByUsernameUseCase.getByUsername(username);
         return ResponseEntity.ok(new UserResponse(
                 result.username(),
                 result.displayName(),
-                result.createdAt().toString()
+                result.createdAt()
         ));
     }
 }

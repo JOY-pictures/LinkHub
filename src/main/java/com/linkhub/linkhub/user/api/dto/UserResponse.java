@@ -5,5 +5,5 @@ import java.time.Instant;
 public record UserResponse(
     String username,
     String displayName,
-    String createdAt
+    Instant createdAt
 ) {}
