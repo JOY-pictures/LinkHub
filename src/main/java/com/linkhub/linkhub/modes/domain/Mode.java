@@ -1,36 +1,31 @@
 package com.linkhub.linkhub.modes.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "modes")
 @Getter
 public class Mode {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String name;
 
-    protected Mode() {
-        //JPA
-    }
-
-    public Mode(String name) {
+    private Mode(String name) {
         this.name = name;
     }
 
-    public static Mode of(String name) {
-        switch (name.toLowerCase()) {
-            case "learning":
-            case "fun":
-            case "calm":
-                return new Mode(name);
-            default:
-                throw new IllegalArgumentException("Unknown mode: " + name);
+    public static Mode create(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Mode name must not be blank");
         }
+        return new Mode(name.trim());
+    }
+
+    public static Mode reconstitute(Long id, String name) {
+        Mode mode = new Mode(name);
+        mode.id = id;
+        return mode;
     }
 }

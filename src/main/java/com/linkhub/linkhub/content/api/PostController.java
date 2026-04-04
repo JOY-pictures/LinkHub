@@ -1,5 +1,8 @@
 package com.linkhub.linkhub.content.api;
 
+import com.linkhub.linkhub.content.api.dto.CreatePostRequest;
+import com.linkhub.linkhub.content.api.dto.CreatePostResponse;
+import com.linkhub.linkhub.content.api.dto.PostResponse;
 import com.linkhub.linkhub.content.application.CreatePostCommand;
 import com.linkhub.linkhub.content.application.CreatePostResult;
 import com.linkhub.linkhub.content.application.CreatePostUseCase;
@@ -7,6 +10,7 @@ import com.linkhub.linkhub.content.application.GetPostByIdUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +29,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePostResponse create(@Valid @RequestBody CreatePostRequest request) {
         CreatePostResult result = createPostUseCase.create(
-                new CreatePostCommand(request.authorId, request.text)
+                new CreatePostCommand(request.authorId(), request.text())
         );
         return new CreatePostResponse(result.postId(), result.createdAt().toString());
     }
@@ -43,21 +47,4 @@ public class PostController {
                 ))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    public record CreatePostRequest(
-        @NotBlank @Size(max = 64) String authorId,
-        @NotBlank @Size(max = 4000) String text
-    ) {}
-
-    public record CreatePostResponse(
-        Long postId,
-        String createdAt
-    ) {}
-
-    public record PostResponse(
-            Long id,
-            String authorId,
-            String text,
-            String createdAt
-    ) {}
 }
