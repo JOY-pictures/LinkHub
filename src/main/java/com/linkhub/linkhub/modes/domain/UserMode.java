@@ -11,17 +11,17 @@ public class UserMode {
 
     private Long id;
 
-    private String userId;
+    private Long userId;
 
     private Mode mode;
 
-    public UserMode(String userId, Mode mode) {
+    public UserMode(Long userId, Mode mode) {
         this.userId = userId;
         this.mode = mode;
     }
 
-    public static UserMode create(String userId, Mode mode) {
-        if (userId == null || userId.isBlank()) {
+    public static UserMode create(Long userId, Mode mode) {
+        if (userId == null) {
             throw new IllegalArgumentException("User ID must not be blank");
         }
         if (mode == null) {
@@ -32,7 +32,7 @@ public class UserMode {
 
 
 
-    public static UserMode reconstitute(Long id, String userId, Mode mode) {
+    public static UserMode reconstitute(Long id, Long userId, Mode mode) {
         UserMode um = new UserMode(userId, mode);
         um.id = id;
         return um;

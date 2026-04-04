@@ -25,6 +25,21 @@ public class UserRepositoryJpaAdapter implements UserRepository {
         return jpa.findById(id).map(this::toDomain);
     }
 
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return jpa.findByUsername(username).map(this::toDomain);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return jpa.existsById(id);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return jpa.existsByUsername(username);
+    }
+
     private User toDomain(UserJpaEntity entity) {
         return User.reconstitute(
                 entity.getId(),

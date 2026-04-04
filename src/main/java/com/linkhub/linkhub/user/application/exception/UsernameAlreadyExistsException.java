@@ -1,4 +1,4 @@
-package com.linkhub.linkhub.common.error;
+package com.linkhub.linkhub.user.application.exception;
 
 public class UsernameAlreadyExistsException extends RuntimeException {
     public UsernameAlreadyExistsException(String username) {

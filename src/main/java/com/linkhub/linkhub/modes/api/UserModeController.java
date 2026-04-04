@@ -22,7 +22,7 @@ public class UserModeController {
     private final GetUserModeUseCase getUserModeUseCase;
 
     @PostMapping
-    public ResponseEntity<UserModeResponse> setMode(@PathVariable String userId,
+    public ResponseEntity<UserModeResponse> setMode(@PathVariable Long userId,
                                                     @Valid @RequestBody UserModeRequest request
     ) {
         SetModeResult response = setUserModeUseCase.setMode(new SetModeCommand(userId, request.modeName()));
@@ -30,7 +30,7 @@ public class UserModeController {
     }
 
     @GetMapping
-    public ResponseEntity<UserModeResponse> getMode(@PathVariable String userId
+    public ResponseEntity<UserModeResponse> getMode(@PathVariable Long userId
     ) {
         Mode mode = getUserModeUseCase.getMode(userId);
         return ResponseEntity.ok(new UserModeResponse(userId, mode.getName()));

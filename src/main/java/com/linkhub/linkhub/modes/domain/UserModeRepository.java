@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface UserModeRepository {
 
-    Optional<UserMode> findByUserId(String userId);
+    Optional<UserMode> findByUserId(Long userId);
 
     UserMode save(UserMode userMode);
 }

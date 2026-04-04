@@ -4,6 +4,8 @@ import com.linkhub.linkhub.modes.domain.Mode;
 import com.linkhub.linkhub.modes.domain.ModeRepository;
 import com.linkhub.linkhub.modes.domain.UserMode;
 import com.linkhub.linkhub.modes.domain.UserModeRepository;
+import com.linkhub.linkhub.user.application.exception.UserNotFoundException;
+import com.linkhub.linkhub.user.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,15 @@ public class SetUserModeUseCase {
 
     private final ModeRepository modeRepository;
     private final UserModeRepository userModeRepository;
+    private final UserInformationPort userInformationPort;
 
-    public SetModeResult setMode(SetModeCommand request) {
+    public SetModeResult setMode(SetModeCommand command) {
+        if (!userInformationPort.existsById(command.userId())) {
+            throw new UserNotFoundException(command.userId());
+        }
 
-        String modeName = request.modeName();
-        String userId = request.userId();
+        String modeName = command.modeName();
+        Long userId = command.userId();
 
         Mode mode = modeRepository.findByName(modeName)
                 .orElseThrow(() ->

@@ -1,6 +1,6 @@
 package com.linkhub.linkhub.modes.application;
 
 public record SetModeCommand(
-        String userId,
+        Long userId,
         String modeName
 ){}

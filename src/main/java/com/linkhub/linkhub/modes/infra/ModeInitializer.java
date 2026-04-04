@@ -29,6 +29,6 @@ public class ModeInitializer implements CommandLineRunner {
 
         for (String name : modes) {
             modeRepository.findByName(name)
-                    .orElseGet(() -> modeRepository.save(new Mode(name)));        }
+                    .orElseGet(() -> modeRepository.save(Mode.create(name)));        }
     }
 }

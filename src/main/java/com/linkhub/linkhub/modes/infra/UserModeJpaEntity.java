@@ -15,7 +15,7 @@ public class UserModeJpaEntity {
     private Long id;
 
     @Column(name = "user_id", nullable = false, unique = true)
-    private String userId;
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mode_id", nullable = false)
@@ -23,12 +23,12 @@ public class UserModeJpaEntity {
 
     protected UserModeJpaEntity() {}
 
-    public UserModeJpaEntity(String userId, ModeJpaEntity mode) {
+    public UserModeJpaEntity(Long userId, ModeJpaEntity mode) {
         this.userId = userId;
         this.mode = mode;
     }
 
-    public UserModeJpaEntity(Long id, String userId, ModeJpaEntity mode) {
+    public UserModeJpaEntity(Long id, Long userId, ModeJpaEntity mode) {
         this.id = id;
         this.userId = userId;
         this.mode = mode;

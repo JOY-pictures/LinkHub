@@ -18,15 +18,15 @@ public abstract class PostJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "author_id", nullable = false, length = 64)
-    private String authorId;
+    @Column(name = "author_id", nullable = false)
+    private Long authorId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     protected PostJpaEntity() {}
 
-    public PostJpaEntity(String authorId, Instant createdAt) {
+    public PostJpaEntity(Long authorId, Instant createdAt) {
         this.authorId = authorId;
         this.createdAt = createdAt;
     }

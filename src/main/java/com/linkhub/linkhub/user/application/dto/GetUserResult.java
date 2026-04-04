@@ -1,4 +1,4 @@
-package com.linkhub.linkhub.user.application;
+package com.linkhub.linkhub.user.application.dto;
 
 import java.time.Instant;
 

@@ -1,10 +1,11 @@
-package com.linkhub.linkhub.user.application;
+package com.linkhub.linkhub.user.application.model;
 
 import java.time.Instant;
 
-public record CreateUserResult (
+public record UserSummary(
         Long id,
         String username,
         String displayName,
         Instant createdAt
-){}
+) {
+}

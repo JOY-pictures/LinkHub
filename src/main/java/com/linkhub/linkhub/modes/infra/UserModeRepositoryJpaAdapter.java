@@ -16,7 +16,7 @@ public class UserModeRepositoryJpaAdapter implements UserModeRepository {
     private final SpringDataModeJpaRepository modeJpaRepository;
 
     @Override
-    public Optional<UserMode> findByUserId(String userId) {
+    public Optional<UserMode> findByUserId(Long userId) {
         return jpa.findByUserId(userId).map(this::toDomain);
     }
 

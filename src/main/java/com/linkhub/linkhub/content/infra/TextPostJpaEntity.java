@@ -16,7 +16,7 @@ public class TextPostJpaEntity extends PostJpaEntity{
 
     protected TextPostJpaEntity() {}
 
-    public TextPostJpaEntity(String authorId, Instant createdAt, String text) {
+    public TextPostJpaEntity(Long authorId, Instant createdAt, String text) {
         super(authorId, createdAt);
         this.text = text;
     }

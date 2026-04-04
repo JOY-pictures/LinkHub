@@ -1,6 +1,7 @@
-package com.linkhub.linkhub.user.application;
+package com.linkhub.linkhub.user.application.usecase;
 
-import com.linkhub.linkhub.common.error.UserNotFoundException;
+import com.linkhub.linkhub.user.application.exception.UserNotFoundException;
+import com.linkhub.linkhub.user.application.dto.GetUserResult;
 import com.linkhub.linkhub.user.domain.User;
 import com.linkhub.linkhub.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
