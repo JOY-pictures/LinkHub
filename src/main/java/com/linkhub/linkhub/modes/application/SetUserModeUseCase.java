@@ -4,8 +4,8 @@ import com.linkhub.linkhub.modes.domain.Mode;
 import com.linkhub.linkhub.modes.domain.ModeRepository;
 import com.linkhub.linkhub.modes.domain.UserMode;
 import com.linkhub.linkhub.modes.domain.UserModeRepository;
-import com.linkhub.linkhub.user.application.exception.UserNotFoundException;
-import com.linkhub.linkhub.user.application.port.UserInformationPort;
+import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
+import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
