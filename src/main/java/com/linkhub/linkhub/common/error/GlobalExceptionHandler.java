@@ -1,7 +1,9 @@
 package com.linkhub.linkhub.common.error;
 
-import com.linkhub.linkhub.user.application.exception.UserNotFoundException;
-import com.linkhub.linkhub.user.application.exception.UsernameAlreadyExistsException;
+import com.linkhub.linkhub.reactions.application.exception.ReactionNotFoundException;
+import com.linkhub.linkhub.reactions.domain.Reaction;
+import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
+import com.linkhub.linkhub.users.application.exception.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +39,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ReactionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleReactionNotFound(ReactionNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ex.getMessage()));
     }
 }

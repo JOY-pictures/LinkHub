@@ -25,7 +25,7 @@ public class Post {
         this.content = content;
     }
 
-    public static Post create(Long authorId, Instant now, PostType postType, PostContent content) {
+    public static Post create(Long authorId, Instant createdAt, PostType postType, PostContent content) {
         if (authorId == null) {
             throw new IllegalArgumentException("authorId must not be blank");
         }
@@ -35,13 +35,25 @@ public class Post {
         if (content == null) {
             throw new IllegalArgumentException("content must not be null");
         }
-        if (now == null) {
+        if (createdAt == null) {
             throw new IllegalArgumentException("createdAt must not be null");
         }
-        return new Post(authorId, now, postType, content);
+        return new Post(authorId, createdAt, postType, content);
     }
 
     public static Post reconstitute(Long id, Long authorId, PostType postType, Instant createdAt, PostContent content) {
+        if (authorId == null) {
+            throw new IllegalArgumentException("authorId must not be blank");
+        }
+        if (postType == null) {
+            throw new IllegalArgumentException("post type must not be null");
+        }
+        if (content == null) {
+            throw new IllegalArgumentException("content must not be null");
+        }
+        if (createdAt == null) {
+            throw new IllegalArgumentException("createdAt must not be null");
+        }
         Post post = new Post(authorId, createdAt, postType, content);
         post.id = id;
         return post;

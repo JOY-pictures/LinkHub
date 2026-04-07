@@ -27,6 +27,12 @@ public class PostRepositoryJpaAdapter implements PostRepository {
         return jpa.findById(id).map(this::toDomain);
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return jpa.existsById(id);
+    }
+
+
     private PostJpaEntity toJpaEntity (Post post) {
         if (post.getContent() instanceof TextContent tc) {
             return new TextPostJpaEntity(
