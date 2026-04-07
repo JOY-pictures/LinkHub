@@ -24,7 +24,7 @@ public class ReactionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CreateReactionResponse create(@Valid @RequestBody CreateReactionRequest request) {
-        CreateReactionResult result = createReactionUseCase.create(new CreateReactionCommand(
+        CreateReactionResult result = createReactionUseCase.set(new CreateReactionCommand(
                 request.userId(), request.postId(), request.reactionType()
         ));
         return new CreateReactionResponse(result.id(),
@@ -36,7 +36,7 @@ public class ReactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReactionResponse> getById(@PathVariable Long id) {
-        return getReactionByIdUseCase.getReaction(id)
+        return getReactionByIdUseCase.getById(id)
                 .map(reaction -> ResponseEntity.ok(
                         new ReactionResponse(
                                 reaction.id(),
