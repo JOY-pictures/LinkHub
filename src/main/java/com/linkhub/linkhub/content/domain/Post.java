@@ -18,14 +18,17 @@ public class Post {
 
     private PostContent content;
 
-    private Post(Long authorId, Instant createdAt, PostType postType, PostContent content) {
+    private Long modeId;
+
+    private Post(Long authorId, Instant createdAt, PostType postType, PostContent content, Long modeId) {
         this.authorId = authorId;
         this.createdAt = createdAt;
         this.postType = postType;
         this.content = content;
+        this.modeId = modeId;
     }
 
-    public static Post create(Long authorId, Instant createdAt, PostType postType, PostContent content) {
+    public static Post create(Long authorId, Instant createdAt, PostType postType, PostContent content, Long modeId) {
         if (authorId == null) {
             throw new IllegalArgumentException("authorId must not be blank");
         }
@@ -38,10 +41,13 @@ public class Post {
         if (createdAt == null) {
             throw new IllegalArgumentException("createdAt must not be null");
         }
-        return new Post(authorId, createdAt, postType, content);
+        if (modeId == null) {
+            throw new IllegalArgumentException("modelId must not be null");
+        }
+        return new Post(authorId, createdAt, postType, content, modeId);
     }
 
-    public static Post reconstitute(Long id, Long authorId, PostType postType, Instant createdAt, PostContent content) {
+    public static Post reconstitute(Long id, Long authorId, PostType postType, Instant createdAt, PostContent content, Long modeId) {
         if (authorId == null) {
             throw new IllegalArgumentException("authorId must not be blank");
         }
@@ -54,7 +60,10 @@ public class Post {
         if (createdAt == null) {
             throw new IllegalArgumentException("createdAt must not be null");
         }
-        Post post = new Post(authorId, createdAt, postType, content);
+        if (modeId == null) {
+            throw new IllegalArgumentException("modelId must not be null");
+        }
+        Post post = new Post(authorId, createdAt, postType, content, modeId);
         post.id = id;
         return post;
     }

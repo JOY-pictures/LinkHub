@@ -1,4 +1,4 @@
-package com.linkhub.linkhub.modes.application;
+package com.linkhub.linkhub.modes.application.usecase;
 
 import com.linkhub.linkhub.common.error.UserModeNotFoundException;
 import com.linkhub.linkhub.modes.domain.Mode;

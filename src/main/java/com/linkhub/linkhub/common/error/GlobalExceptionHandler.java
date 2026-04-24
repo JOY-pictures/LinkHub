@@ -1,6 +1,7 @@
 package com.linkhub.linkhub.common.error;
 
 import com.linkhub.linkhub.content.application.except.PostNotFoundException;
+import com.linkhub.linkhub.modes.application.except.ModeNotFoundException;
 import com.linkhub.linkhub.reactions.application.exception.ReactionNotFoundException;
 import com.linkhub.linkhub.reactions.domain.Reaction;
 import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
@@ -52,6 +53,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePostNotFound(PostNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ModeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleModeNotFound(ModeNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ex.getMessage()));

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,13 +33,20 @@ public class PostRepositoryJpaAdapter implements PostRepository {
         return jpa.existsById(id);
     }
 
+    @Override
+    public List<Post> findPostsByModeIdWithLimit(Long modeId, int limit) {
+        return jpa.findPostsByModeIdWithLimit(modeId, limit);
+    }
+
+
 
     private PostJpaEntity toJpaEntity (Post post) {
         if (post.getContent() instanceof TextContent tc) {
             return new TextPostJpaEntity(
                     post.getAuthorId(),
                     post.getCreatedAt(),
-                    tc.getText()
+                    tc.getText(),
+                    post.getModeId()
             );
         }
         throw new IllegalArgumentException("Unknown content type: "+ post.getContent().getClass());
@@ -52,7 +60,8 @@ public class PostRepositoryJpaAdapter implements PostRepository {
                     entity.getAuthorId(),
                     PostType.TEXT,
                     entity.getCreatedAt(),
-                    content
+                    content,
+                    entity.getModeId()
             );
         }
         throw new IllegalArgumentException("Unknown entity type: "+ entity.getClass());

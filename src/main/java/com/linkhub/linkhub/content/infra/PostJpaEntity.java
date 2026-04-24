@@ -24,10 +24,14 @@ public abstract class PostJpaEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    @Column(name = "mode_id", nullable = false)
+    private Long modeId;
+
     protected PostJpaEntity() {}
 
-    public PostJpaEntity(Long authorId, Instant createdAt) {
+    public PostJpaEntity(Long authorId, Instant createdAt, Long modeId) {
         this.authorId = authorId;
         this.createdAt = createdAt;
+        this.modeId = modeId;
     }
 }
