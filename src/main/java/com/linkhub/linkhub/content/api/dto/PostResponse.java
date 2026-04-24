@@ -4,5 +4,6 @@ public record PostResponse(
         Long id,
         Long authorId,
         String text,
-        String createdAt
+        String createdAt,
+        String modeName
 ) {}

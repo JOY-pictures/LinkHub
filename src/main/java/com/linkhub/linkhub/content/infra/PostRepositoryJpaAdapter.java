@@ -6,6 +6,9 @@ import com.linkhub.linkhub.content.domain.PostType;
 import com.linkhub.linkhub.content.domain.TextContent;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,7 +38,11 @@ public class PostRepositoryJpaAdapter implements PostRepository {
 
     @Override
     public List<Post> findPostsByModeIdWithLimit(Long modeId, int limit) {
-        return jpa.findPostsByModeIdWithLimit(modeId, limit);
+        Pageable pageable = PageRequest.of(0, limit, Sort.by("createdAt").descending());
+        return jpa.findPostsByModeIdWithLimit(modeId, pageable)
+                .stream()
+                .map(this::toDomain)
+                .toList();
     }
 
 

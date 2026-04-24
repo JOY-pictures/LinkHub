@@ -25,7 +25,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePostResponse create(@Valid @RequestBody CreatePostRequest request) {
         CreatePostResult result = createPostUseCase.create(
-                new CreatePostCommand(request.authorId(), request.text())
+                new CreatePostCommand(request.authorId(), request.text(), request.modeName())
         );
         return new CreatePostResponse(result.postId(), result.createdAt().toString());
     }
@@ -38,7 +38,8 @@ public class PostController {
                                 post.id(),
                                 post.authorId(),
                                 post.text(),
-                                post.createdAt()
+                                post.createdAt(),
+                                post.modeName()
                         )
                 ))
                 .orElseGet(() -> ResponseEntity.notFound().build());

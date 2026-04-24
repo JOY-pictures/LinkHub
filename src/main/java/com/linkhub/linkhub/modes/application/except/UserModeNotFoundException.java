@@ -1,4 +1,4 @@
-package com.linkhub.linkhub.common.error;
+package com.linkhub.linkhub.modes.application.except;
 
 public class UserModeNotFoundException extends RuntimeException {
     public UserModeNotFoundException(Long userId) {
