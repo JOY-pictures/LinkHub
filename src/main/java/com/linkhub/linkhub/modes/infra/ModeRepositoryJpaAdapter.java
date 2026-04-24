@@ -19,6 +19,11 @@ public class ModeRepositoryJpaAdapter implements ModeRepository {
     }
 
     @Override
+    public Optional<Mode> findById(Long modeId) {
+        return jpa.findById(modeId).map(this::toDomain);
+    }
+
+    @Override
     public Mode save(Mode mode) {
         ModeJpaEntity modeJpaEntity = toJpaEntity(mode);
         ModeJpaEntity saved = jpa.save(modeJpaEntity);

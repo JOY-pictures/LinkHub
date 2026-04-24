@@ -1,5 +1,8 @@
-package com.linkhub.linkhub.modes.application;
+package com.linkhub.linkhub.modes.application.usecase;
 
+import com.linkhub.linkhub.modes.application.dto.SetModeCommand;
+import com.linkhub.linkhub.modes.application.dto.SetModeResult;
+import com.linkhub.linkhub.modes.application.except.ModeNotFoundException;
 import com.linkhub.linkhub.modes.domain.Mode;
 import com.linkhub.linkhub.modes.domain.ModeRepository;
 import com.linkhub.linkhub.modes.domain.UserMode;
@@ -8,6 +11,8 @@ import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +31,7 @@ public class SetUserModeUseCase {
         Long userId = command.userId();
 
         Mode mode = modeRepository.findByName(modeName)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Unknown mode: " + modeName));
+                .orElseThrow(() -> new ModeNotFoundException(modeName));
 
         UserMode userMode = userModeRepository.findByUserId(userId)
                 .orElseGet(() -> UserMode.create(userId, mode));

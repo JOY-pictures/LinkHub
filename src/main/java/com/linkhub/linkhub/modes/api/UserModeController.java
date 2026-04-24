@@ -2,13 +2,12 @@ package com.linkhub.linkhub.modes.api;
 
 import com.linkhub.linkhub.modes.api.dto.UserModeRequest;
 import com.linkhub.linkhub.modes.api.dto.UserModeResponse;
-import com.linkhub.linkhub.modes.application.SetModeCommand;
-import com.linkhub.linkhub.modes.application.SetModeResult;
-import com.linkhub.linkhub.modes.application.GetUserModeUseCase;
-import com.linkhub.linkhub.modes.application.SetUserModeUseCase;
+import com.linkhub.linkhub.modes.application.dto.SetModeCommand;
+import com.linkhub.linkhub.modes.application.dto.SetModeResult;
+import com.linkhub.linkhub.modes.application.usecase.GetUserModeUseCase;
+import com.linkhub.linkhub.modes.application.usecase.SetUserModeUseCase;
 import com.linkhub.linkhub.modes.domain.Mode;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

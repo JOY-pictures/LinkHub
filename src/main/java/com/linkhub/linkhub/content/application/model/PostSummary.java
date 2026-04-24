@@ -8,5 +8,6 @@ public record PostSummary (
         Long id,
         Long authorId,
         PostContent content,
-        Instant createdAt
+        Instant createdAt,
+        Long modeId
 ){}

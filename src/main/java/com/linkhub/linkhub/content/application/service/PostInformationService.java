@@ -27,7 +27,8 @@ public class PostInformationService implements PostInformationPort {
                     post.getId(),
                     post.getAuthorId(),
                     post.getContent(),
-                    post.getCreatedAt()
+                    post.getCreatedAt(),
+                    post.getModeId()
             );
         });
     }

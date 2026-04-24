@@ -7,5 +7,6 @@ import jakarta.validation.constraints.Size;
 
 public record CreatePostRequest(
         @NotNull @Positive Long authorId,
-        @NotBlank @Size(max = 4000) String text
+        @NotBlank @Size(max = 4000) String text,
+        @NotBlank @Size(max = 50) String modeName
 ) {}

@@ -8,7 +8,9 @@ import lombok.Getter;
 import java.time.Instant;
 
 @Entity
-@Table(name = "reaction")
+@Table(
+        name = "reaction", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "post_id"})
+)
 @Getter
 public class ReactionJpaEntity {
 
