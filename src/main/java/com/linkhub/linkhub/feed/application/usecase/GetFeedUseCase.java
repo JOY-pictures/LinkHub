@@ -7,8 +7,9 @@ import com.linkhub.linkhub.content.domain.TextContent;
 import com.linkhub.linkhub.feed.application.dto.FeedPostView;
 import com.linkhub.linkhub.feed.application.dto.GetFeedCommand;
 
+import com.linkhub.linkhub.modes.application.model.ModeSummary;
 import com.linkhub.linkhub.modes.application.port.ModeInformationPort;
-import com.linkhub.linkhub.modes.application.service.UserModeInformationService;
+import com.linkhub.linkhub.modes.application.port.UserModeInformationPort;
 import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class GetFeedUseCase {
 
     private final PostSortingPort postSortingPort;
     private final UserInformationPort userInformationPort;
-    private final UserModeInformationService userModeInformationService;
+    private final UserModeInformationPort userModeInformationPort;
     private final ModeInformationPort modeInformationPort;
 
     public List<FeedPostView> getFeed(GetFeedCommand command) {
@@ -34,9 +35,9 @@ public class GetFeedUseCase {
 
         int limit = normalizeLimit(command.limit());
 
-        String userMode = userModeInformationService.findModeByUserId(command.userId()).modeName();
+        ModeSummary userMode = userModeInformationPort.findModeByUserId(command.userId());
 
-        return postSortingPort.findPostsByModeWithLimit(userMode, limit).
+        return postSortingPort.findPostsByModeWithLimit(userMode.modeName(), limit).
                 stream().map(postSummary -> {
                     String text = extractText(postSummary.content());
                     String modeName = modeInformationPort.findModeById(postSummary.modeId()).modeName();
