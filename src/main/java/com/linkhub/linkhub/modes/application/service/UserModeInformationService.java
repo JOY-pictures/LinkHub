@@ -1,15 +1,12 @@
 package com.linkhub.linkhub.modes.application.service;
 
-import com.linkhub.linkhub.common.error.UserModeNotFoundException;
+import com.linkhub.linkhub.modes.application.except.UserModeNotFoundException;
 import com.linkhub.linkhub.modes.application.model.ModeSummary;
 import com.linkhub.linkhub.modes.application.port.UserModeInformationPort;
 import com.linkhub.linkhub.modes.domain.UserMode;
 import com.linkhub.linkhub.modes.domain.UserModeRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

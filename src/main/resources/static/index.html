@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header>
+    <h1>LinkHub Demo</h1>
+    <p>Демо-страница для проверки режимов и ленты</p>
+</header>
+<main>
+    <section>
+        <h2>Пользователь</h2>
+
+        <div>
+            <label for="userIdInput">ID пользователя</label>
+            <input id="userIdInput" type="number" value="1" min="1">
+        </div>
+    </section>
+
+    <section>
+        <h2>Режим</h2>
+
+        <div>
+            <label for="modeSelect">Выбрать режим</label>
+            <select id="modeSelect">
+                <option value="Balanced">Balanced</option>
+                <option value="Learning">Learning</option>
+                <option value="Fun">Fun</option>
+                <option value="Calm">Calm</option>
+                <option value="DeepThinking">DeepThinking</option>
+                <option value="Motivation">Motivation</option>
+            </select>
+
+        </div>
+
+        <button id="changeModeButton">Сменить режим</button>
+
+
+    </section>
+
+    <section>
+        <h2>Создать пост</h2>
+
+        <div>
+            <label for="authorIdInput">ID автора</label>
+            <input id="authorIdInput" type="number" value="1" min="1">
+        </div>
+
+        <div>
+            <label for="postModeSelect">Подходящий режим</label>
+            <select id="postModeSelect">
+                <option value="Balanced">Balanced</option>
+                <option value="Learning">Learning</option>
+                <option value="Fun">Fun</option>
+                <option value="Calm">Calm</option>
+                <option value="DeepThinking">Deep Thinking</option>
+                <option value="Motivation">Motivation</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="postTextInput">Текст поста</label>
+            <textarea id="postTextInput" placeholder="Напишите текст поста"></textarea>
+        </div>
+
+        <button id="createPostButton">Создать пост</button>
+    </section>
+
+    <section>
+        <h2>Лента</h2>
+
+        <div>
+            <label for="limitInput">Количество постов</label>
+            <input id="limitInput" type="number" value="5" max="100">
+
+            <button id="refreshFeedButton">Обновить ленту</button>
+
+            <div id="feedContainer"></div>
+        </div>
+    </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

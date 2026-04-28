@@ -1,15 +1,16 @@
-package com.linkhub.linkhub.modes.infra;
+package com.linkhub.linkhub.modes.infra.bootstrap;
 
 import com.linkhub.linkhub.modes.domain.Mode;
 import com.linkhub.linkhub.modes.domain.ModeRepository;
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class ModeInitializer implements CommandLineRunner {
 
@@ -29,6 +30,7 @@ public class ModeInitializer implements CommandLineRunner {
 
         for (String name : modes) {
             modeRepository.findByName(name)
-                    .orElseGet(() -> modeRepository.save(Mode.create(name)));        }
+                    .orElseGet(() -> modeRepository.save(Mode.create(name)));
+        }
     }
 }

@@ -18,8 +18,9 @@ public class FeedController {
     private final GetFeedUseCase getFeedUseCase;
 
     @GetMapping
-    public List<FeedPostResponse> getFeed(@Valid @RequestBody FeedPostRequest request) {
-        return getFeedUseCase.getFeed(new GetFeedCommand(request.userId(), request.limit()))
+    public List<FeedPostResponse> getFeed(@RequestParam Long userId,
+                                          @RequestParam (defaultValue = "20") int limit) {
+        return getFeedUseCase.getFeed(new GetFeedCommand(userId, limit))
                 .stream()
                 .map(post -> new FeedPostResponse(
                         post.postId(),
