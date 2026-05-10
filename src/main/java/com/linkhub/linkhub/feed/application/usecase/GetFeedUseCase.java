@@ -10,8 +10,11 @@ import com.linkhub.linkhub.feed.application.dto.GetFeedCommand;
 import com.linkhub.linkhub.modes.application.model.ModeSummary;
 import com.linkhub.linkhub.modes.application.port.ModeInformationPort;
 import com.linkhub.linkhub.modes.application.port.UserModeInformationPort;
+import com.linkhub.linkhub.reactions.application.dto.ReactionView;
 import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
 import com.linkhub.linkhub.reactions.application.port.ReactionSummaryPort;
+import com.linkhub.linkhub.reactions.application.port.UserReactionPort;
+import com.linkhub.linkhub.reactions.domain.ReactionType;
 import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class GetFeedUseCase {
     private final UserModeInformationPort userModeInformationPort;
     private final ModeInformationPort modeInformationPort;
     private final ReactionSummaryPort reactionSummaryPort;
+    private final UserReactionPort userReactionPort;
 
     public List<FeedPostView> getFeed(GetFeedCommand command) {
         if (!userInformationPort.existsById(command.userId())) {
@@ -48,6 +53,9 @@ public class GetFeedUseCase {
                     String text = extractText(postSummary.content());
                     String modeName = modeInformationPort.findModeById(postSummary.modeId()).modeName();
                     PostReactionSummary reactions = reactionSummaryPort.count(postSummary.id());
+                    ReactionType userReaction = userReactionPort.getReaction(command.userId(), postSummary.id())
+                            .map(ReactionView::reactionType)
+                            .orElse(null);
 
                     return new FeedPostView(
                             postSummary.id(),
@@ -57,7 +65,8 @@ public class GetFeedUseCase {
                             modeName,
                             LocalDateTime.ofInstant(postSummary.createdAt(), ZoneId.systemDefault()),
                             explain(modeName, limit),
-                            reactions
+                            reactions,
+                            userReaction
                     );
                 })
                 .toList();

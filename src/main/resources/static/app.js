@@ -3,6 +3,7 @@ const userIdInput = document.getElementById("userIdInput");
 const limitInput = document.getElementById("limitInput");
 const refreshFeedButton = document.getElementById("refreshFeedButton");
 const feedContainer = document.getElementById("feedContainer");
+const statusMessage = document.getElementById("statusMessage");
 
 refreshFeedButton.addEventListener("click", refreshFeed)
 
@@ -24,11 +25,8 @@ async function refreshFeed() {
 
         renderFeed(data);
     } catch (error) {
+        showStatus("Ошибка обновления ленты", "error");
         console.error(error);
-
-        feedContainer.innerHTML = `
-            <p><strong>Ошибка: </strong> ${error.message}</p>
-        `;
     }
 }
 
@@ -37,42 +35,44 @@ function renderFeed(posts) {
         feedContainer.innerHTML = "";
         for (const post of posts) {
             const article = document.createElement("article");
+            article.classList.add("feed-post");
 
             article.innerHTML = `
                 <h3>Пост #${post.postId}</h3>
-                <p><strong>Автор:</strong> ${post.authorId}</p>
-                <p>${post.text}</p>
-                <p><strong>Режим:</strong> ${post.modeName}</p>
-                <p><strong>Почему показан:</strong> ${post.reason}</p>
+                <p class="post-meta"><strong>Автор:</strong> ${post.authorId}</p>
+                <p class="post-text">${post.text}</p>
+                <p class="post-meta"><strong>Режим:</strong> ${post.modeName}</p>
+                <p class="post-reason"><strong>Почему показан:</strong> ${post.reason}</p>
 
-                ${renderReactions(post.postId, post.reactions)}
+                ${renderReactions(post.postId, post.reactions, post.myReaction)}
             `;
 
             feedContainer.appendChild(article);
         }
     } catch (error) {
         console.error(error);
+        showStatus("Ошибка показа ленты", "error");
     }
 }
 
-function renderReactions(postId, reactions) {
+function renderReactions(postId, reactions, userReaction) {
     if (!reactions) {
         return `<p><strong>Реакции:</strong> нет данных</p>`
     }
 
     return `
-        <div>
+        <div class="reaction-panel">
             <strong>Реакции:</strong>
-            <button onclick="setReaction(${postId}, 'USEFUL')">
+            <button class = "reaction-button" onclick="setReaction(${postId}, 'USEFUL')">
                 Useful ${reactions.usefulCount}
             </button>
-            <button onclick="setReaction(${postId}, 'FUNNY')">
+            <button class = "reaction-button" onclick="setReaction(${postId}, 'FUNNY')">
                 Funny ${reactions.funnyCount}
             </button>
-            <button onclick="setReaction(${postId}, 'INSPIRING')">
+            <button class = "reaction-button" onclick="setReaction(${postId}, 'INSPIRING')">
                 Inspiring ${reactions.inspiringCount}
             </button>
-            <button onclick="setReaction(${postId}, 'CALM')">
+            <button class = "reaction-button" onclick="setReaction(${postId}, 'CALM')">
                 Calm ${reactions.calmCount}
             </button>
         </div>`
@@ -100,10 +100,10 @@ async function setReaction(postId, reaction) {
             throw new Error(data.message || data.error || "Ошибка при постановке реакции");
         }
 
-        console.log("Реакция поставлена")
+        showStatus("Реакция поставлена", "success");
     } catch (error) {
         console.error(error);
-        alert("Не удалось поставить реакцию: " + error.message);
+        showStatus("Не удалось поставить рекацию", "error");
     }
 }
 
@@ -133,12 +133,12 @@ async function changeMode() {
         if (!response.ok) {
             throw new Error(result.message || result.error || "Ошибка при смене режима");
         }
-        console.log("Сменён режим: " + result);
+        showStatus("Режим сменен", "success");
 
         await refreshFeed();
     } catch (error) {
         console.error(error);
-        alert("Не удалось сменить режим: " + error.message);
+        showStatus("Не удалось сменить режим", "error");
     }
 }
 
@@ -155,8 +155,9 @@ async function createPost() {
         const modeName = postModeSelect.value
         const text = postTextInput.value
 
-        if (text.length < 1) {
-            alert("Нельзя создать пустой пост")
+        if (text.trim().length < 1) {
+            showStatus("Нельзя создать пустой пост", "error");
+            return;
         }
 
         const request = {
@@ -182,11 +183,19 @@ async function createPost() {
         }
         postTextInput.value = ""
 
-        console.log(result)
+        showStatus("Пост создан", "success");
+
+        await refreshFeed();
+
     } catch (error) {
         console.error(error);
-        alert("Не удалост создать пост")
+        showStatus("Не удалост создать пост", "error");
     }
+}
+
+function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = type;
 }
 
 

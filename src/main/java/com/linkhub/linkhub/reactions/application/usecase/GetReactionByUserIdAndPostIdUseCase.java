@@ -8,22 +8,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-//@Service
-//@RequiredArgsConstructor
-//public class GetReactionByUserIdAndPostIdUseCase {
-//
-//    private final ReactionRepository reactionRepository;
-//
-//    public Optional<ReactionView> getReaction(Long userId, Long postId) {
-//        return reactionRepository.findByUserIdAndPostId(userId, postId).
-//                map(reaction -> {
-//                    return new ReactionView(
-//                            reaction.getId(),
-//                            reaction.getUserId(),
-//                            reaction.getPostId(),
-//                            reaction.getReactionType(),
-//                            reaction.getCreatedAt()
-//                    );
-//                });
-//    }
-//}
+@Service
+@RequiredArgsConstructor
+public class GetReactionByUserIdAndPostIdUseCase {
+
+    private final ReactionRepository reactionRepository;
+
+    public Optional<ReactionView> getReaction(Long userId, Long postId) {
+        return reactionRepository.findByUserIdAndPostId(userId, postId).
+                map(reaction -> {
+                    return new ReactionView(
+                            reaction.getId(),
+                            reaction.getUserId(),
+                            reaction.getPostId(),
+                            reaction.getReactionType(),
+                            reaction.getCreatedAt()
+                    );
+                });
+    }
+}

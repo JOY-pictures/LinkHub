@@ -30,7 +30,8 @@ public class FeedController {
                         post.modeName(),
                         post.createdAt(),
                         post.reason(),
-                        post.reactions()
+                        post.reactions(),
+                        post.myReaction()
                 ))
                 .toList();
     }
