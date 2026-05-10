@@ -61,19 +61,27 @@ function renderReactions(postId, reactions, userReaction) {
     }
 
     return `
-        <div class="reaction-panel">
+        <div class="reaction-panel" data-post-id="${postId}">
             <strong>Реакции:</strong>
-            <button class = "reaction-button" onclick="setReaction(${postId}, 'USEFUL')">
-                Useful ${reactions.usefulCount}
+            
+            <button class = "reaction-button ${activeClass(userReaction, 'USEFUL')}" data-reaction-type="USEFUL"
+             onclick="setReaction(${postId}, 'USEFUL')">
+                Useful <span class="reaction-count">${reactions.usefulCount}</span>
             </button>
-            <button class = "reaction-button" onclick="setReaction(${postId}, 'FUNNY')">
-                Funny ${reactions.funnyCount}
+            
+            <button class = "reaction-button ${activeClass(userReaction, 'FUNNY')}" data-reaction-type="FUNNY"
+             onclick="setReaction(${postId}, 'FUNNY')">
+                Funny <span class="reaction-count">${reactions.funnyCount}</span>
             </button>
-            <button class = "reaction-button" onclick="setReaction(${postId}, 'INSPIRING')">
-                Inspiring ${reactions.inspiringCount}
+            
+            <button class = "reaction-button ${activeClass(userReaction, 'INSPIRING')}" data-reaction-type="INSPIRING"
+             onclick="setReaction(${postId}, 'INSPIRING')">
+                Inspiring <span class="reaction-count">${reactions.inspiringCount}</span>
             </button>
-            <button class = "reaction-button" onclick="setReaction(${postId}, 'CALM')">
-                Calm ${reactions.calmCount}
+            
+            <button class = "reaction-button ${activeClass(userReaction, 'CALM')}" data-reaction-type="CALM"
+             onclick="setReaction(${postId}, 'CALM')">
+                Calm <span class="reaction-count">${reactions.calmCount}</span>
             </button>
         </div>`
 }
@@ -101,6 +109,7 @@ async function setReaction(postId, reaction) {
         }
 
         showStatus("Реакция поставлена", "success");
+        updateReactionLocally(postId, reaction);
     } catch (error) {
         console.error(error);
         showStatus("Не удалось поставить рекацию", "error");
@@ -198,4 +207,44 @@ function showStatus(message, type) {
     statusMessage.className = type;
 }
 
+function activeClass(userReaction, reactionType) {
+    return userReaction === reactionType ? "active" : "";
+}
 
+function changeButtonCount(button, delta) {
+    const countElement = button.querySelector(".reaction-count");
+    const currentCount = Number(countElement.textContent);
+
+    countElement.textContent = currentCount + delta;
+}
+
+function updateReactionLocally(postId, newReaction) {
+    const panel = document.querySelector(
+        `.reaction-panel[data-post-id="${postId}"]`
+    );
+
+    if (!panel) {
+        return;
+    }
+
+    const previousButton = panel.querySelector(".reaction-button.active");
+    const newButton = panel.querySelector(
+        `.reaction-button[data-reaction-type="${newReaction}"]`
+    );
+
+    if (!newButton) {
+        return;
+    }
+
+    if (newButton === previousButton) {
+        return;
+    }
+
+    if (previousButton) {
+        changeButtonCount(previousButton, -1);
+        previousButton.classList.remove("active");
+    }
+
+    changeButtonCount(newButton, 1);
+    newButton.classList.add("active");
+}
