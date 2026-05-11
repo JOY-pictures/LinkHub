@@ -1,4 +1,4 @@
-package com.linkhub.linkhub.reactions.application.dto;
+package com.linkhub.linkhub.reactions.application.model;
 
 public record PostReactionSummary (
         Long postId,

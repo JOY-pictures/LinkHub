@@ -1,6 +1,6 @@
 package com.linkhub.linkhub.reactions.application.usecase;
 
-import com.linkhub.linkhub.reactions.application.dto.PostReactionSummary;
+import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
 import com.linkhub.linkhub.reactions.domain.ReactionRepository;
 import com.linkhub.linkhub.reactions.domain.ReactionType;
 import lombok.RequiredArgsConstructor;

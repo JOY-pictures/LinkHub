@@ -1,0 +1,169 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eeeeee;
+    color: #141414;
+}
+
+header {
+    background: white;
+    padding: 24px 32px;
+    border-bottom: 1px solid black;
+}
+
+header h1 {
+    margin: 0 0 8px;
+}
+
+main {
+    max-width: 800px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+section {
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #525261;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid black;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #3e74fd;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background: #2469ff;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0034ba;
+}
+
+section div {
+    margin-bottom: 6px;
+}
+
+#statusMessage {
+    max-width: 800px;
+    margin: 16px auto 0;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+#statusMessage:empty {
+    display: none;
+}
+
+#statusMessage.success {
+    background: #eaffea;
+    color: green;
+    border: 1px solid black;
+}
+
+#statusMessage.error {
+    background: #ffecec;
+    color: red;
+    border: 1px solid black;
+}
+
+#statusMessage.info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+}
+
+#feedContainer {
+    margin-top: 16px;
+}
+
+.feed-post {
+    background: white;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 14px;
+}
+
+.feed-post h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.post-text {
+    white-space: pre-wrap;
+}
+
+.reaction-button {
+    margin-right: 8px;
+    margin-top: 6px;
+    background: #c96dff;
+    color: #ffffff;
+}
+
+.reaction-button:hover {
+    background: #5d0097;
+}
+
+.post-meta {
+    color: #525261;
+    font-size: 14px;
+}
+
+.post-reason {
+    background: #f3f3f3;
+    border-left: 4px solid #2469ff;
+    padding: 8px 10px;
+    border-radius: 4px;
+}
+
+.reaction-panel {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #dddddd;
+}
+
+.reaction-button.active {
+    background: #5d0097;
+    color: white;
+    border: 2px solid #230038;
+}

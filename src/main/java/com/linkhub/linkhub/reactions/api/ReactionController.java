@@ -5,7 +5,7 @@ import com.linkhub.linkhub.reactions.api.dto.CreateReactionResponse;
 import com.linkhub.linkhub.reactions.api.dto.ReactionResponse;
 import com.linkhub.linkhub.reactions.application.dto.CreateReactionCommand;
 import com.linkhub.linkhub.reactions.application.dto.CreateReactionResult;
-import com.linkhub.linkhub.reactions.application.dto.PostReactionSummary;
+import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
 import com.linkhub.linkhub.reactions.application.usecase.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

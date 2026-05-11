@@ -29,7 +29,9 @@ public class FeedController {
                         post.modeId(),
                         post.modeName(),
                         post.createdAt(),
-                        post.reason()
+                        post.reason(),
+                        post.reactions(),
+                        post.myReaction()
                 ))
                 .toList();
     }

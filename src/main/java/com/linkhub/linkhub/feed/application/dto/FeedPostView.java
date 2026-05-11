@@ -1,5 +1,8 @@
 package com.linkhub.linkhub.feed.application.dto;
 
+import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
+import com.linkhub.linkhub.reactions.domain.ReactionType;
+
 import java.time.LocalDateTime;
 
 public record FeedPostView (
@@ -9,5 +12,7 @@ public record FeedPostView (
         Long modeId,
         String modeName,
         LocalDateTime createdAt,
-        String reason
+        String reason,
+        PostReactionSummary reactions,
+        ReactionType myReaction
 ) {}
