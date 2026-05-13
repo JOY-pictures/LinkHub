@@ -24,7 +24,6 @@ public class ModeInitializer implements CommandLineRunner {
                 "Learning",
                 "Fun",
                 "Calm",
-                "DeepThinking",
                 "Motivation"
         );
 

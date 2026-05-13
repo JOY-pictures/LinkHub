@@ -7,6 +7,7 @@ import com.linkhub.linkhub.content.domain.TextContent;
 import com.linkhub.linkhub.feed.application.dto.FeedPostView;
 import com.linkhub.linkhub.feed.application.dto.GetFeedCommand;
 
+import com.linkhub.linkhub.feed.application.ranking.PostRankingScorer;
 import com.linkhub.linkhub.modes.application.model.ModeSummary;
 import com.linkhub.linkhub.modes.application.port.ModeInformationPort;
 import com.linkhub.linkhub.modes.application.port.UserModeInformationPort;
@@ -23,8 +24,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class GetFeedUseCase {
     private final ModeInformationPort modeInformationPort;
     private final ReactionSummaryPort reactionSummaryPort;
     private final UserReactionPort userReactionPort;
+    private final List<PostRankingScorer> scorers;
 
     public List<FeedPostView> getFeed(GetFeedCommand command) {
         if (!userInformationPort.existsById(command.userId())) {
@@ -47,9 +49,22 @@ public class GetFeedUseCase {
 
         ModeSummary userMode = userModeInformationPort.findModeByUserId(command.userId());
 
-        List<PostSummary> summary = postSortingPort.findPostsByModeWithLimit(userMode.modeName(), candidateLimit);
+        List<PostSummary> candidates = postSortingPort.findPostsByModeWithLimit(userMode.modeName(), candidateLimit);
 
-        return selectWithAuthorDiversity(summary, limit).stream().map(postSummary -> {
+        PostRankingScorer scorer = scorers.stream()
+                .filter(s -> s.supports(userMode.modeName()))
+                .findFirst()
+                .orElse(null);
+
+        if (scorer != null) {
+            candidates = new ArrayList<>(candidates);
+            candidates.sort(Comparator.comparingDouble((PostSummary p) -> {
+                PostReactionSummary reactions = reactionSummaryPort.count(p.id());
+                return scorer.calculateScore(reactions);
+            }).reversed());
+        }
+
+        return selectWithAuthorDiversity(candidates, limit).stream().map(postSummary -> {
                     String text = extractText(postSummary.content());
                     String modeName = modeInformationPort.findModeById(postSummary.modeId()).modeName();
                     PostReactionSummary reactions = reactionSummaryPort.count(postSummary.id());
@@ -64,7 +79,7 @@ public class GetFeedUseCase {
                             postSummary.modeId(),
                             modeName,
                             LocalDateTime.ofInstant(postSummary.createdAt(), ZoneId.systemDefault()),
-                            explain(modeName, limit),
+                            explain(modeName, limit, scorer != null),
                             reactions,
                             userReaction
                     );
@@ -87,10 +102,14 @@ public class GetFeedUseCase {
         throw new IllegalArgumentException("Unsupported content type: " + content.getClass());
     }
 
-    private String explain (String modeName, int limit) {
-        return  "Пост показан, потому что он относится к режиму: " + modeName +
-                ", который сейчас выбран у пользователя. " +
-                "Он попал в выбранный лимит ленты: " + limit + " постов";
+    private String explain (String modeName, int limit, boolean ranked) {
+        String base = "Пост показан, потому что он относится к режиму: " + modeName + ".";
+        if (ranked) {
+            base += " Алгоритм ранжирования поднял его выше на основе реакций сообщества.";
+        }
+        return base + " Лимит ленты: " + limit;
+
+
     }
 
     private int calculateCandidateLimit(int limit) {
