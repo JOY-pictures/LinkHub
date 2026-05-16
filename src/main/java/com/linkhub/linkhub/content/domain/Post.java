@@ -20,12 +20,33 @@ public class Post {
 
     private Long modeId;
 
+    private Long communityModeId;
+    private boolean modeLocked;
+
     private Post(Long authorId, Instant createdAt, PostType postType, PostContent content, Long modeId) {
         this.authorId = authorId;
         this.createdAt = createdAt;
         this.postType = postType;
         this.content = content;
         this.modeId = modeId;
+    }
+
+    public boolean canAuthorChangeMode(int currentReactionCount) {
+        if (this.modeLocked) {
+            return false;
+        }
+
+        if (currentReactionCount >= 50) {
+            this.modeLocked = true;
+            return false;
+        }
+
+        return true;
+    }
+
+    public void overrideModeByCommunity(Long newModeId) {
+        this.communityModeId = newModeId;
+        this.modeLocked = true;
     }
 
     public static Post create(Long authorId, Instant createdAt, PostType postType, PostContent content, Long modeId) {

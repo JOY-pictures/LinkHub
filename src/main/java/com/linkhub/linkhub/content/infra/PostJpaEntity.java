@@ -27,6 +27,12 @@ public abstract class PostJpaEntity {
     @Column(name = "mode_id", nullable = false)
     private Long modeId;
 
+    @Column(name = "community_mode_id")
+    private Long communityModeId;
+
+    @Column(name = "mode_locked", nullable = false)
+    private boolean modeLocked = false;
+
     protected PostJpaEntity() {}
 
     public PostJpaEntity(Long authorId, Instant createdAt, Long modeId) {
