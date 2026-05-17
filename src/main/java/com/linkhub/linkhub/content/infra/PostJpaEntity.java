@@ -35,9 +35,12 @@ public abstract class PostJpaEntity {
 
     protected PostJpaEntity() {}
 
-    public PostJpaEntity(Long authorId, Instant createdAt, Long modeId) {
+    public PostJpaEntity(Long id, Long authorId, Instant createdAt, Long modeId, Long communityModeId, boolean modeLocked) {
+        this.id = id;
         this.authorId = authorId;
         this.createdAt = createdAt;
         this.modeId = modeId;
+        this.communityModeId = communityModeId;
+        this.modeLocked = modeLocked;
     }
 }

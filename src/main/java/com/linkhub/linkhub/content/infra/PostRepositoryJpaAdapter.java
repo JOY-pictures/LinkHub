@@ -50,10 +50,13 @@ public class PostRepositoryJpaAdapter implements PostRepository {
     private PostJpaEntity toJpaEntity (Post post) {
         if (post.getContent() instanceof TextContent tc) {
             return new TextPostJpaEntity(
+                    post.getId(),
                     post.getAuthorId(),
                     post.getCreatedAt(),
                     tc.getText(),
-                    post.getModeId()
+                    post.getModeId(),
+                    post.getCommunityModeId(),
+                    post.isModeLocked()
             );
         }
         throw new IllegalArgumentException("Unknown content type: "+ post.getContent().getClass());
@@ -68,7 +71,9 @@ public class PostRepositoryJpaAdapter implements PostRepository {
                     PostType.TEXT,
                     entity.getCreatedAt(),
                     content,
-                    entity.getModeId()
+                    entity.getModeId(),
+                    entity.getCommunityModeId(),
+                    entity.isModeLocked()
             );
         }
         throw new IllegalArgumentException("Unknown entity type: "+ entity.getClass());

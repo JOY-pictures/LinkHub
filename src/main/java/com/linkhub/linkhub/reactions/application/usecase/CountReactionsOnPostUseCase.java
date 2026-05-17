@@ -13,12 +13,18 @@ public class CountReactionsOnPostUseCase {
     private final ReactionRepository reactionRepository;
 
     public PostReactionSummary count (Long postId) {
+        long calmCount = countType(postId, ReactionType.CALM);
+        long usefulCount = countType(postId, ReactionType.USEFUL);
+        long funnyCount = countType(postId, ReactionType.FUNNY);
+        long inspiringCount = countType(postId, ReactionType.INSPIRING);
+        long totalCount = calmCount + usefulCount + funnyCount + inspiringCount;
         return new PostReactionSummary(
+                totalCount,
                 postId,
-                countType(postId, ReactionType.CALM),
-                countType(postId, ReactionType.USEFUL),
-                countType(postId, ReactionType.FUNNY),
-                countType(postId, ReactionType.INSPIRING)
+                calmCount,
+                usefulCount,
+                funnyCount,
+                inspiringCount
         );
     }
 

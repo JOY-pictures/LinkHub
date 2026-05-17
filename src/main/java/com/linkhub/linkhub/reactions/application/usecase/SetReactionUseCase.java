@@ -4,11 +4,13 @@ import com.linkhub.linkhub.content.application.except.PostNotFoundException;
 import com.linkhub.linkhub.content.application.port.PostInformationPort;
 import com.linkhub.linkhub.reactions.application.dto.CreateReactionCommand;
 import com.linkhub.linkhub.reactions.application.dto.CreateReactionResult;
+import com.linkhub.linkhub.reactions.application.dto.PostReactionChangedEvent;
 import com.linkhub.linkhub.reactions.domain.Reaction;
 import com.linkhub.linkhub.reactions.domain.ReactionRepository;
 import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -23,6 +25,7 @@ public class SetReactionUseCase {
     private final PostInformationPort postInformationPort;
     private final UserInformationPort userInformationPort;
     private final Clock clock;
+    private final ApplicationEventPublisher eventPublisher;
 
     public CreateReactionResult set(CreateReactionCommand command) {
         if (!postInformationPort.existsById(command.postId())) {
@@ -53,6 +56,13 @@ public class SetReactionUseCase {
                 command.reactionType(),
                 now);
         Reaction saved = reactionRepository.save(reaction);
+
+        eventPublisher.publishEvent(new PostReactionChangedEvent(
+                saved.getPostId(),
+                saved.getUserId(),
+                saved.getReactionType()
+        ));
+
         return new CreateReactionResult(
                 saved.getId(),
                 saved.getUserId(),

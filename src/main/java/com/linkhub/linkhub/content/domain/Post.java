@@ -31,17 +31,8 @@ public class Post {
         this.modeId = modeId;
     }
 
-    public boolean canAuthorChangeMode(int currentReactionCount) {
-        if (this.modeLocked) {
-            return false;
-        }
-
-        if (currentReactionCount >= 50) {
-            this.modeLocked = true;
-            return false;
-        }
-
-        return true;
+    public void crystallize() {
+        this.modeLocked = true;
     }
 
     public void overrideModeByCommunity(Long newModeId) {
@@ -68,7 +59,7 @@ public class Post {
         return new Post(authorId, createdAt, postType, content, modeId);
     }
 
-    public static Post reconstitute(Long id, Long authorId, PostType postType, Instant createdAt, PostContent content, Long modeId) {
+    public static Post reconstitute(Long id, Long authorId, PostType postType, Instant createdAt, PostContent content, Long modeId, Long communityModeId, boolean modeLocked) {
         if (authorId == null) {
             throw new IllegalArgumentException("authorId must not be blank");
         }
@@ -86,6 +77,8 @@ public class Post {
         }
         Post post = new Post(authorId, createdAt, postType, content, modeId);
         post.id = id;
+        post.communityModeId = communityModeId;
+        post.modeLocked = modeLocked;
         return post;
     }
 }
