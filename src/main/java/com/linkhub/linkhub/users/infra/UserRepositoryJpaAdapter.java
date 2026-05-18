@@ -45,7 +45,8 @@ public class UserRepositoryJpaAdapter implements UserRepository {
                 entity.getId(),
                 entity.getUsername(),
                 entity.getDisplayName(),
-                entity.getCreatedAt());
+                entity.getCreatedAt()
+        );
     }
 
     private UserJpaEntity toJpaEntity(User user) {

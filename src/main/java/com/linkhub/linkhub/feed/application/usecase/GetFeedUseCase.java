@@ -20,6 +20,7 @@ import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,6 +40,7 @@ public class GetFeedUseCase {
     private final UserReactionPort userReactionPort;
     private final List<PostRankingScorer> scorers;
 
+    @Transactional(readOnly = true)
     public List<FeedPostView> getFeed(GetFeedCommand command) {
         if (!userInformationPort.existsById(command.userId())) {
             throw new UserNotFoundException(command.userId());

@@ -7,6 +7,7 @@ import com.linkhub.linkhub.users.domain.User;
 import com.linkhub.linkhub.users.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -18,6 +19,7 @@ public class CreateUserUseCase {
     private final UserRepository userRepository;
     private final Clock clock;
 
+    @Transactional
     public CreateUserResult create(CreateUserCommand command) {
         if (userRepository.existsByUsername(command.username())) {
             throw new UsernameAlreadyExistsException(command.username());

@@ -5,6 +5,7 @@ import com.linkhub.linkhub.reactions.domain.Reaction;
 import com.linkhub.linkhub.reactions.domain.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ public class GetReactionByUserIdAndPostIdUseCase {
 
     private final ReactionRepository reactionRepository;
 
+    @Transactional(readOnly = true)
     public Optional<ReactionView> getReaction(Long userId, Long postId) {
         return reactionRepository.findByUserIdAndPostId(userId, postId).
                 map(reaction -> {

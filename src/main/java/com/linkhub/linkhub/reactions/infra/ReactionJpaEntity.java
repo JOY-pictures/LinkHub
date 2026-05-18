@@ -33,13 +33,6 @@ public class ReactionJpaEntity {
 
     protected ReactionJpaEntity() {}
 
-    public ReactionJpaEntity(Long userId, Long postId, ReactionType reactionType, Instant createdAt) {
-        this.userId = userId;
-        this.postId = postId;
-        this.reactionType = reactionType;
-        this.createdAt = createdAt;
-    }
-
     public ReactionJpaEntity(Long id, Long userId, Long postId, ReactionType reactionType, Instant createdAt) {
         this.id = id;
         this.userId = userId;
