@@ -4,6 +4,7 @@ import com.linkhub.linkhub.content.application.except.PostNotFoundException;
 import com.linkhub.linkhub.modes.application.except.ModeNotFoundException;
 import com.linkhub.linkhub.modes.application.except.UserModeNotFoundException;
 import com.linkhub.linkhub.reactions.application.exception.ReactionNotFoundException;
+import com.linkhub.linkhub.trust.application.exception.AuthorTrustNotFoundException;
 import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.exception.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ModeNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleModeNotFound(ModeNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorTrustNotFoundException.class)
+    public ResponseEntity<ErrorResponse> AuthorTrustNotFound(AuthorTrustNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ex.getMessage()));
