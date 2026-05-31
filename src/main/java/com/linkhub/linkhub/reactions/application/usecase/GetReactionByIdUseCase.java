@@ -1,14 +1,11 @@
 package com.linkhub.linkhub.reactions.application.usecase;
 
-import com.linkhub.linkhub.reactions.application.dto.ReactionView;
-import com.linkhub.linkhub.reactions.application.exception.ReactionNotFoundException;
-import com.linkhub.linkhub.reactions.domain.Reaction;
+import com.linkhub.linkhub.reactions.domain.ReactionView;
 import com.linkhub.linkhub.reactions.domain.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

@@ -22,6 +22,12 @@ public class HistoryInformationService implements HistoryInformationPort {
     }
 
     @Override
+    public List<Long> getPostIdsByUserId(Long userId) {
+        return getPostIdsByUserIdUseCase.get(userId, 1000);
+    }
+
+
+    @Override
     public List<HistoryPostSummary> getPostsByUserId(Long userId, int limit) {
         return getPostsByUserIdUseCase.get(userId, limit);
 

@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface HistoryInformationPort {
     List<Long> getPostIdsByUserId(Long userId, int limit);
+    List<Long> getPostIdsByUserId(Long userId);
     List<HistoryPostSummary> getPostsByUserId(Long userId, int limit);
 }

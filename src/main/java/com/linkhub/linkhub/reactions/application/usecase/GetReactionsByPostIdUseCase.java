@@ -1,6 +1,6 @@
 package com.linkhub.linkhub.reactions.application.usecase;
 
-import com.linkhub.linkhub.reactions.application.dto.ReactionView;
+import com.linkhub.linkhub.reactions.domain.ReactionView;
 import com.linkhub.linkhub.reactions.domain.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

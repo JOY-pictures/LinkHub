@@ -5,6 +5,8 @@ import com.linkhub.linkhub.trust.domain.AuthorTrustRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -18,6 +20,13 @@ public class AuthorTrustJpaAdapter implements AuthorTrustRepository {
         AuthorTrustJpaEntity entity = toEntity(authorTrust);
         AuthorTrustJpaEntity saved = jpa.save(entity);
         return toDomain(saved);
+    }
+
+    @Override
+    public List<AuthorTrust> findAllByAuthorIds(Collection<Long> authorIds) {
+        return jpa.findByAuthorIdIn(authorIds).stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override

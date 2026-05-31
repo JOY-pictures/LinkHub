@@ -1,13 +1,10 @@
 package com.linkhub.linkhub.reactions.infra;
 
-import com.linkhub.linkhub.reactions.domain.Reaction;
-import com.linkhub.linkhub.reactions.domain.ReactionRepository;
-import com.linkhub.linkhub.reactions.domain.ReactionType;
+import com.linkhub.linkhub.reactions.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,6 +56,93 @@ public class ReactionRepositoryJpaAdapter implements ReactionRepository {
     public boolean existsByUserIdAndPostId(Long userId, Long postId) {
         return jpa.existsByUserIdAndPostId(userId, postId);
     }
+
+    @Override
+    public List<Reaction> findByPostIds(Collection<Long> postIds) {
+        return jpa.findByPostIdIn(postIds).stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
+    @Override
+    public PostReactionSummary findSummaryByPostId(Long postId) {
+        List<Object[]> rows = jpa.countReactionsByPostId(postId);
+
+        long calm = 0; long useful = 0; long funny = 0; long inspiring = 0; long total = 0;
+
+        for (Object[] row: rows) {
+            ReactionType reactionType = (ReactionType) row[0];
+            long count = (long) row[1];
+            total += count;
+            switch (reactionType) {
+                case CALM -> calm = count;
+                case USEFUL -> useful = count;
+                case FUNNY -> funny = count;
+                case INSPIRING -> inspiring = count;
+            }
+        }
+        return new PostReactionSummary(postId, total, calm, useful, funny, inspiring);
+    }
+
+    @Override
+    public Map<Long, PostReactionSummary> findSummariesByPostIds(Collection<Long> postIds) {
+        if (postIds == null || postIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Object[]> rows = jpa.countReactionsByPostIds(postIds);
+        Map<Long, Map<ReactionType, Long>> countsByPostMap = new HashMap<>();
+
+        for (Object[] row: rows) {
+            Long postId = (Long) row[0];
+            ReactionType reactionType = (ReactionType) row[1];
+            long count = (long) row[2];
+            countsByPostMap.computeIfAbsent(postId, k -> new HashMap<>())
+                    .put(reactionType, count);
+        }
+
+        Map<Long, PostReactionSummary> resultMap = new HashMap<>();
+        for (Long postId: postIds) {
+            Map<ReactionType, Long> typeCounts = countsByPostMap.getOrDefault(postId, Collections.emptyMap());
+
+            long calm = typeCounts.getOrDefault(ReactionType.CALM, 0L);
+            long funny = typeCounts.getOrDefault(ReactionType.FUNNY, 0L);
+            long inspiring = typeCounts.getOrDefault(ReactionType.INSPIRING, 0L);
+            long useful = typeCounts.getOrDefault(ReactionType.USEFUL, 0L);
+
+            long total = calm + funny + inspiring + useful;
+
+            resultMap.put(postId, new PostReactionSummary(
+                    postId,
+                    total,
+                    calm,
+                    useful,
+                    funny,
+                    inspiring
+            ));
+        }
+
+        return resultMap;
+    }
+
+    @Override
+    public Map<Long, ReactionType> findReactionsByUserIdAndPostIds(Long userId, Collection<Long> postIds) {
+        if (postIds == null || postIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        List<Object[]> rows = jpa.findReactionsByUserIdAndPostIds(userId, postIds);
+
+        Map<Long, ReactionType> userReactions = new HashMap<>();
+
+        for (Object[] row: rows) {
+            Long postId = (Long) row[0];
+            ReactionType type = (ReactionType) row[1];
+            userReactions.put(postId, type);
+        }
+
+        return userReactions;
+    }
+
 
     private Reaction toDomain(ReactionJpaEntity entity) {
         return Reaction.reconstitute(

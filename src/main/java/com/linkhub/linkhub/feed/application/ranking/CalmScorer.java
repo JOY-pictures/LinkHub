@@ -4,7 +4,7 @@ import com.linkhub.linkhub.reactions.domain.PostReactionSummary;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UsefulScorer implements PostRankingScorer{
+public class CalmScorer implements PostRankingScorer{
     @Override
     public boolean supports(String modeName) {
         return "Calm".equalsIgnoreCase(modeName);
@@ -12,6 +12,6 @@ public class UsefulScorer implements PostRankingScorer{
 
     @Override
     public double calculateScore(PostReactionSummary reactions) {
-        return (reactions.calmCount() * 2.0) * (reactions.inspiringCount() * 1.0);
+        return (reactions.calmCount() * 2.0) + (reactions.inspiringCount() * 1.0);
     }
 }

@@ -5,7 +5,7 @@ import com.linkhub.linkhub.modes.domain.ModeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,6 +29,26 @@ public class ModeRepositoryJpaAdapter implements ModeRepository {
         ModeJpaEntity saved = jpa.save(modeJpaEntity);
         return toDomain(saved);
     }
+
+    @Override
+    public Map<Long, String> findModeNameByIds(Collection<Long> modeIds) {
+        if (modeIds == null || modeIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Object[]> rows = jpa.findNameByIds(modeIds);
+
+        Map<Long, String> nameMap = new HashMap<>();
+
+        for (Object[] row: rows) {
+            Long modeId = (Long) row[0];
+            String name = (String) row[1];
+            nameMap.put(modeId, name);
+        }
+
+        return nameMap;
+    }
+
 
     private ModeJpaEntity toJpaEntity(Mode mode) {
         return new ModeJpaEntity(mode.getName());

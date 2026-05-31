@@ -2,9 +2,7 @@ package com.linkhub.linkhub.history.application.usecase;
 
 import com.linkhub.linkhub.history.domain.ViewedPost;
 import com.linkhub.linkhub.history.domain.ViewedPostRepository;
-import com.linkhub.linkhub.history.infra.ViewedPostEntity;
 import com.linkhub.linkhub.reactions.application.dto.PostReactionChangedEvent;
-import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

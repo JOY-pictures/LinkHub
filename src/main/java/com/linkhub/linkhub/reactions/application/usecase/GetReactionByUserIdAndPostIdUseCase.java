@@ -1,7 +1,6 @@
 package com.linkhub.linkhub.reactions.application.usecase;
 
-import com.linkhub.linkhub.reactions.application.dto.ReactionView;
-import com.linkhub.linkhub.reactions.domain.Reaction;
+import com.linkhub.linkhub.reactions.domain.ReactionView;
 import com.linkhub.linkhub.reactions.domain.ReactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class GetReactionByUserIdAndPostIdUseCase {
     private final ReactionRepository reactionRepository;
 
     @Transactional(readOnly = true)
-    public Optional<ReactionView> getReaction(Long userId, Long postId) {
+    public Optional<ReactionView> get(Long userId, Long postId) {
         return reactionRepository.findByUserIdAndPostId(userId, postId).
                 map(reaction -> {
                     return new ReactionView(

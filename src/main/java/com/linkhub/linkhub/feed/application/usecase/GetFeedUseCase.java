@@ -8,26 +8,29 @@ import com.linkhub.linkhub.feed.application.dto.FeedPostView;
 import com.linkhub.linkhub.feed.application.dto.GetFeedCommand;
 
 import com.linkhub.linkhub.feed.application.ranking.PostRankingScorer;
+import com.linkhub.linkhub.history.application.port.HistoryInformationPort;
 import com.linkhub.linkhub.modes.application.model.ModeSummary;
 import com.linkhub.linkhub.modes.application.port.ModeInformationPort;
 import com.linkhub.linkhub.modes.application.port.UserModeInformationPort;
-import com.linkhub.linkhub.reactions.application.dto.ReactionView;
-import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
+import com.linkhub.linkhub.reactions.domain.ReactionView;
 import com.linkhub.linkhub.reactions.application.port.ReactionSummaryPort;
 import com.linkhub.linkhub.reactions.application.port.UserReactionPort;
+import com.linkhub.linkhub.reactions.domain.PostReactionSummary;
 import com.linkhub.linkhub.reactions.domain.ReactionType;
+import com.linkhub.linkhub.trust.application.port.AuthorTrustInformationPort;
 import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GetFeedUseCase {
@@ -39,6 +42,8 @@ public class GetFeedUseCase {
     private final ReactionSummaryPort reactionSummaryPort;
     private final UserReactionPort userReactionPort;
     private final List<PostRankingScorer> scorers;
+    private final HistoryInformationPort historyInformationPort;
+    private final AuthorTrustInformationPort authorTrustInformationPort;
 
     @Transactional(readOnly = true)
     public List<FeedPostView> getFeed(GetFeedCommand command) {
@@ -51,38 +56,79 @@ public class GetFeedUseCase {
 
         ModeSummary userMode = userModeInformationPort.findModeByUserId(command.userId());
 
-        List<PostSummary> candidates = postSortingPort.findPostsByModeWithLimit(userMode.modeName(), candidateLimit);
+        PostRankingScorer scorer = selectScorer(userMode.modeName());
 
-        PostRankingScorer scorer = scorers.stream()
-                .filter(s -> s.supports(userMode.modeName()))
-                .findFirst()
-                .orElse(null);
+        Set<Long> viewedPostIds = new HashSet<>(historyInformationPort.getPostIdsByUserId(command.userId()));
 
-        if (scorer != null) {
-            candidates = new ArrayList<>(candidates);
-            candidates.sort(Comparator.comparingDouble((PostSummary p) -> {
-                PostReactionSummary reactions = reactionSummaryPort.count(p.id());
-                return scorer.calculateScore(reactions);
-            }).reversed());
-        }
+        List<PostSummary> rawCandidates = postSortingPort.findPostsByModeIdWithLimit(userMode.modeId(), candidateLimit);
 
-        return selectWithAuthorDiversity(candidates, limit).stream().map(postSummary -> {
-                    String text = extractText(postSummary.content());
-                    String modeName = modeInformationPort.findModeById(postSummary.modeId()).modeName();
-                    PostReactionSummary reactions = reactionSummaryPort.count(postSummary.id());
-                    ReactionType userReaction = userReactionPort.getReaction(command.userId(), postSummary.id())
-                            .map(ReactionView::reactionType)
-                            .orElse(null);
+        List<PostSummary> filteredCandidates = rawCandidates.stream()
+                .filter(post -> !viewedPostIds.contains(post.id()))
+                .toList();
+
+        List<Long> postIds = filteredCandidates.stream()
+                .map(PostSummary::id)
+                .toList();
+
+        Set<Long> authorIds = filteredCandidates.stream()
+                .map(PostSummary::authorId)
+                .collect(Collectors.toSet());
+
+
+        Set<Long> modeIds = filteredCandidates.stream()
+                .map(PostSummary::modeId)
+                .collect(Collectors.toSet());
+
+        Map<Long, String> modeNameMap = modeInformationPort.findModeNameByIds(modeIds);
+
+
+        Map<Long, Double> authorTrustMap = authorTrustInformationPort.getTrustScoresByAuthorIds(authorIds);
+
+        Map<Long, PostReactionSummary> reactionSummaryMap = reactionSummaryPort.getReactionSummariesByPostIds(postIds);
+
+        Map<Long, Double> postScoreMap = filteredCandidates.stream()
+                .collect(Collectors.toMap(
+                        PostSummary::id,
+                        post -> {
+                            PostReactionSummary reactions = reactionSummaryMap.get(post.id());
+
+                            double baseScore = scorer.calculateScore(reactions);
+                            double trustScore = authorTrustMap.getOrDefault(post.authorId(), 1.0);
+                            return baseScore * trustScore;
+                }));
+
+        List<PostSummary> sortedCandidates = filteredCandidates.stream()
+                .sorted(Comparator.comparingDouble((PostSummary p) -> postScoreMap.get(p.id())).reversed())
+                .toList();
+
+        List<PostSummary> diverseCandidates = selectWithAuthorDiversity(sortedCandidates, limit);
+
+
+        Map<Long, ReactionType> userReactionsMap = userReactionPort.getReactionsByUserIdAndPostIds(command.userId(),
+                diverseCandidates.stream().map(PostSummary::id).toList());
+
+        return diverseCandidates.stream()
+                .map(post -> {
+                    double finalScore = postScoreMap.get(post.id());
+
+                    boolean isRanked = finalScore > 0;
+
+                    String text = extractText(post.content());
+
+                    String modeName = modeNameMap.get(post.modeId());
+
+                    ReactionType userReaction = userReactionsMap.get(post.id());
+
 
                     return new FeedPostView(
-                            postSummary.id(),
-                            postSummary.authorId(),
+                            post.id(),
+                            post.authorId(),
                             text,
-                            postSummary.modeId(),
+                            post.modeId(),
                             modeName,
-                            LocalDateTime.ofInstant(postSummary.createdAt(), ZoneId.systemDefault()),
-                            explain(modeName, limit, scorer != null),
-                            reactions,
+                            LocalDateTime.ofInstant(post.createdAt(), ZoneId.systemDefault()),
+                            explain(modeName, limit, isRanked),
+                            reactionSummaryMap.get(post.id()),
                             userReaction
                     );
                 })
@@ -115,7 +161,7 @@ public class GetFeedUseCase {
     }
 
     private int calculateCandidateLimit(int limit) {
-        return Math.min(limit * 3, 100);
+        return Math.min(limit * 5, 300);
     }
 
     private List<PostSummary> selectWithAuthorDiversity (List<PostSummary> summaries, int limit) {
@@ -151,5 +197,12 @@ public class GetFeedUseCase {
         }
 
         return resultSummary;
+    }
+
+    private PostRankingScorer selectScorer(String modeName) {
+        return scorers.stream()
+                .filter(s -> s.supports(modeName))
+                .findFirst()
+                .orElse(null);
     }
 }
