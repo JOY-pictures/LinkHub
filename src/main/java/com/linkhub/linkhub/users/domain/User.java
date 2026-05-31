@@ -15,6 +15,8 @@ public class User {
 
     private Instant createdAt;
 
+    private double trustScore;
+
     private User(String username, String displayName, Instant createdAt) {
         this.username = username;
         this.displayName = displayName;
@@ -47,5 +49,12 @@ public class User {
         User user = new User(username, displayName, createdAt);
         user.id = id;
         return user;
+    }
+
+    public void updateTrustScore(double newTrustScore) {
+        if (newTrustScore < 0.0 || newTrustScore > 1.0) {
+            throw new IllegalArgumentException("Trust score must be between 0.0 and 1.0");
+        }
+        this.trustScore = newTrustScore;
     }
 }

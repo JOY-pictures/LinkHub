@@ -12,6 +12,7 @@ import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -27,6 +28,7 @@ public class SetReactionUseCase {
     private final Clock clock;
     private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     public CreateReactionResult set(CreateReactionCommand command) {
         if (!postInformationPort.existsById(command.postId())) {
             throw new PostNotFoundException(command.postId());
@@ -60,7 +62,8 @@ public class SetReactionUseCase {
         eventPublisher.publishEvent(new PostReactionChangedEvent(
                 saved.getPostId(),
                 saved.getUserId(),
-                saved.getReactionType()
+                saved.getReactionType(),
+                now
         ));
 
         return new CreateReactionResult(

@@ -7,6 +7,7 @@ import com.linkhub.linkhub.content.domain.TextContent;
 import com.linkhub.linkhub.modes.application.port.ModeInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class GetPostByIdUseCase {
     private final PostRepository postRepository;
     private final ModeInformationPort modeInformationPort;
 
-
+    @Transactional(readOnly = true)
     public Optional<PostView> getById (Long postId) {
 
         return postRepository.findById(postId).

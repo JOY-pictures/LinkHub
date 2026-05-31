@@ -30,7 +30,7 @@ public class PostCrystallizationListener {
                 return;
             }
 
-            long totalReactionsCount = reactionSummaryPort.count(post.getId()).totalCount();
+            long totalReactionsCount = reactionSummaryPort.getReactionSummaryByPostId(post.getId()).totalCount();
 
             if (totalReactionsCount >= crystallizationThreshold) {
                 log.info("Пост {} набрал {} реакций. Кристаллизация активирована!", event.postId(), totalReactionsCount);

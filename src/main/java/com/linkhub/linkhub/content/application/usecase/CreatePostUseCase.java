@@ -11,6 +11,7 @@ import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -24,6 +25,7 @@ public class CreatePostUseCase {
     private final Clock clock;
     private final ModeInformationPort modeInformationPort;
 
+    @Transactional
     public CreatePostResult create(CreatePostCommand command) {
         if (!userInformationPort.existsById(command.authorId())) {
             throw new UserNotFoundException(command.authorId());

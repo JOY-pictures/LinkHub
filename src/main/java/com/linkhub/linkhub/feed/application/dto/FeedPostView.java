@@ -1,6 +1,6 @@
 package com.linkhub.linkhub.feed.application.dto;
 
-import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
+import com.linkhub.linkhub.reactions.domain.PostReactionSummary;
 import com.linkhub.linkhub.reactions.domain.ReactionType;
 
 import java.time.LocalDateTime;

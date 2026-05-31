@@ -8,6 +8,7 @@ import com.linkhub.linkhub.users.application.exception.UserNotFoundException;
 import com.linkhub.linkhub.users.application.port.UserInformationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class GetUserModeUseCase {
     private final UserModeRepository userModeRepository;
     private final UserInformationPort userInformationPort;
 
+    @Transactional(readOnly = true)
     public Mode getMode(Long userId) {
         if (!userInformationPort.existsById(userId)) {
             throw new UserNotFoundException(userId);

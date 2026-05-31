@@ -27,7 +27,7 @@ public class PostController {
         CreatePostResult result = createPostUseCase.create(
                 new CreatePostCommand(request.authorId(), request.text(), request.modeName())
         );
-        return new CreatePostResponse(result.postId(), result.createdAt().toString());
+        return new CreatePostResponse(result.postId(), result.createdAt());
     }
 
     @GetMapping("/{id}")

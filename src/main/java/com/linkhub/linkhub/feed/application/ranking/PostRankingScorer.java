@@ -1,6 +1,6 @@
 package com.linkhub.linkhub.feed.application.ranking;
 
-import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
+import com.linkhub.linkhub.reactions.domain.PostReactionSummary;
 
 public interface PostRankingScorer {
     boolean supports(String modeName);

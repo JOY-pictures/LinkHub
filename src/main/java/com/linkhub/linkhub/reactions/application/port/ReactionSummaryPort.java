@@ -1,7 +1,11 @@
 package com.linkhub.linkhub.reactions.application.port;
 
-import com.linkhub.linkhub.reactions.application.model.PostReactionSummary;
+import com.linkhub.linkhub.reactions.domain.PostReactionSummary;
+
+import java.util.Collection;
+import java.util.Map;
 
 public interface ReactionSummaryPort {
-    PostReactionSummary count (Long postId);
+    PostReactionSummary getReactionSummaryByPostId (Long postId);
+    Map<Long, PostReactionSummary> getReactionSummariesByPostIds(Collection<Long> postIds);
 }

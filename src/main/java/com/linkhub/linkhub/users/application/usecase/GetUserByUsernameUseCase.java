@@ -6,6 +6,7 @@ import com.linkhub.linkhub.users.domain.User;
 import com.linkhub.linkhub.users.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class GetUserByUsernameUseCase {
 
     private final UserRepository repository;
 
+    @Transactional(readOnly = true)
     public GetUserResult getByUsername(String username) {
         User user = repository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
